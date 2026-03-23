@@ -50,7 +50,7 @@ function logToolUse(tool: string, args: Record<string, unknown>) {
       return `${k}=${s.length > 60 ? s.slice(0, 60) + "…" : s}`;
     })
     .join("  ");
-  console.log(`\n🐾 Poke is using tool: \x1b[36m${tool}\x1b[0m`);
+  console.log(`\n🦞 Poke is using tool: \x1b[36m${tool}\x1b[0m`);
   if (preview) console.log(`   ${preview}`);
 }
 
@@ -360,7 +360,7 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
 });
 
 server.listen(PORT, "127.0.0.1", () => {
-  console.log(`\n🐾  PokeClaw is running`);
+  console.log(`\n🦞  PokeClaw is running`);
   console.log(`    Local  : http://127.0.0.1:${PORT}/mcp`);
   if (TOKEN) {
     console.log(`    Auth   : token required  (?token=... or Authorization: Bearer ...)`);
