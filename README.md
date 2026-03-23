@@ -1,7 +1,19 @@
-## 🐾 PokeClaw — Poke Recipe for Mac Access
+# 🐾 PokeClaw
 
-PokeClaw is a local MCP server that bridges Poke to your Mac's filesystem and terminal.
-Once running, Poke can read/write files, search your Mac, and run shell commands on your behalf.
+**PokeClaw** is a local [MCP](https://modelcontextprotocol.io) server that gives [Poke](https://poke.com) access to your Mac's filesystem and terminal.
+
+## What is Poke?
+
+[Poke](https://poke.com) is your personal AI — the assistant you text to get things done. Poke can manage your emails, calendar, reminders, integrations, and much more, all through a simple conversation.
+
+By default, Poke lives in the cloud and doesn't have access to files on your computer. **PokeClaw changes that.** It runs a small server locally on your Mac and creates a secure tunnel so Poke can reach it. Once connected, you can ask Poke things like:
+
+- "Read my project notes in ~/Documents/notes.md"
+- "Run `git status` in my repo"
+- "List everything on my Desktop"
+- "What is my NODE_ENV set to?"
+
+PokeClaw works on any Mac — iMac, Mac mini, Mac Pro, MacBook Air, MacBook Pro, etc.
 
 ---
 
@@ -9,18 +21,18 @@ Once running, Poke can read/write files, search your Mac, and run shell commands
 
 | Tool | What it does |
 |---|---|
-| read_file | Read any file in allowed paths |
-| write_file | Create or edit files on your Mac |
-| list_directory | Browse folder contents |
-| search_files | Find files by glob pattern (e.g. **/*.ts) |
-| run_command | Run any shell command (git, npm, brew, python…) |
-| get_env | Read environment variables |
+| `read_file` | Read any file in allowed paths |
+| `write_file` | Create or edit files on your Mac |
+| `list_directory` | Browse folder contents |
+| `search_files` | Find files by glob pattern (e.g. `**/*.ts`) |
+| `run_command` | Run any shell command (`git`, `npm`, `brew`, `python`…) |
+| `get_env` | Read environment variables |
 
 ---
 
 ## Automated Setup (Recommended)
 
-The `start-pokeclaw.sh` script now handles the **full setup and launch** automatically. Just run it once:
+The `start-pokeclaw.sh` script handles the **full setup and launch** automatically. Just run it once:
 
 ```bash
 bash start-pokeclaw.sh
@@ -30,12 +42,14 @@ The script will:
 1. **Install Homebrew** if not present
 2. **Install Bun** (preferred) or use Node.js if already installed
 3. **Install cloudflared** via Homebrew if not present
-4. **Install dependencies** (glob and TypeScript types)
+4. **Install dependencies**
 5. **Guide you through configuration** — port, allowed folders, auth token
 6. **Optionally save settings** to `~/.zshrc` for future sessions
 7. **Launch the server and cloudflared tunnel**, then print your public MCP URL
 
 No manual steps required on a fresh Mac.
+
+> **Quiet mode:** If you've already run the onboarding once, relaunch with `bash start-pokeclaw.sh --quiet` to skip all prompts and use your saved settings.
 
 ---
 
@@ -101,7 +115,7 @@ cloudflared tunnel --url http://127.0.0.1:3741
 ## Step 4 — Connect to Poke
 
 1. Copy the tunnel URL printed by the script (e.g. `https://random-words.trycloudflare.com`)
-2. Go to **Poke → Settings → Integrations → Add MCP Server**
+2. Go to **[Poke](https://poke.com) → Settings → Integrations → Add MCP Server**
 3. Name: `PokeClaw`
 4. URL: `https://random-words.trycloudflare.com/mcp?token=your-secret-token-here`
    - The token is passed as a query parameter — **no Authorization header needed**
@@ -109,7 +123,7 @@ cloudflared tunnel --url http://127.0.0.1:3741
 5. Save — Poke will verify the connection
 6. Test it: tell Poke "use PokeClaw to list my Desktop files"
 
-> **Note:** The server also still accepts `Authorization: Bearer <token>` headers for backwards compatibility.
+> **Note:** The server also accepts `Authorization: Bearer <token>` headers for backwards compatibility.
 
 ---
 
@@ -168,12 +182,16 @@ launchctl load ~/Library/LaunchAgents/com.pokeclaw.plist
 | Problem | Fix |
 |---|---|
 | "port already in use" | Set `POKECLAW_PORT=3742` (or any free port) |
-| Poke says "connection refused" | Make sure both server.ts AND cloudflared are running |
-| cloudflared URL changes | Restart → get new URL → update in Poke settings |
+| Poke says "connection refused" | Make sure both `server.ts` AND cloudflared are running |
+| cloudflared URL changes | Restart → get new URL → update in [Poke settings](https://poke.com/settings/integrations) |
 | Permission denied on a file | Add its parent directory to `POKECLAW_ROOTS` |
 | Command times out | Pass `timeout_ms` in your request to Poke |
 | Bun not found after install | Run `source ~/.zshrc` or open a new terminal tab |
-| Poke UI rejects the URL | Use the `?token=` query parameter format instead of the Authorization header |
+| Poke rejects the URL | Use the `?token=` query parameter format instead of the Authorization header |
 
 For a permanent (stable) tunnel URL, create a named Cloudflare tunnel:
 https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/
+
+---
+
+Made for [Poke](https://poke.com) — your personal AI.
